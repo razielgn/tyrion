@@ -1,7 +1,7 @@
 require 'tyrion'
 
 tmp_dir = File.join(File.dirname(__FILE__), '..', 'tmp')
-FileUtils.mkdir tmp_dir unless Dir.exists? tmp_dir
+FileUtils.mkdir tmp_dir unless File.directory? tmp_dir
 Tyrion::Connection.path = tmp_dir
 
 require 'mocha'
