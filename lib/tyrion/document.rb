@@ -63,7 +63,7 @@ module Tyrion
       end
       
       def method_missing(method, *args)
-        if method =~ /^find_by_(.+)$/
+        if method.to_s =~ /^find_by_(.+)$/
           attr = $1
           arg = args.shift || raise("Provide at least one argument!")
           
