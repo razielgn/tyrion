@@ -51,11 +51,31 @@ module Tyrion
       end
       
       def all
-        Document.memory[klass_name]
+        Document.memory[klass_name].dup
       end
       
       def delete_all
         Document.memory[klass_name].clear
+      end
+      
+      def delete attributes = {}
+        where(attributes).each(&:delete)
+      end
+      
+      def where attributes = {}
+        all.map do |doc|
+          match = attributes.each_pair.map do |k, v|
+            operator = if v.is_a? Regexp
+              :=~
+            else
+              :==
+            end
+            
+            true if doc.send(:read_attribute, k.to_s).send(operator, v)
+          end.compact
+          
+          doc if match.count == attributes.count
+        end.compact
       end
       
       def klass_name
@@ -68,10 +88,10 @@ module Tyrion
           arg = args.shift || raise("Provide at least one argument!")
           
           all.each do |doc|
-            operator = if arg.is_a? String
-              :==
-            elsif arg.is_a? Regexp
+            operator = if arg.is_a? Regexp
               :=~
+            else
+              :==
             end
             
             return doc if doc.attributes[attr].send(operator, arg)

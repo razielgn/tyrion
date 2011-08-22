@@ -7,6 +7,8 @@ describe Tyrion::Document do
   end
   
   before :each do
+    Post.delete_all
+    
     yml_posts.each do |p|
       a = Post.create! p
     end
@@ -25,15 +27,20 @@ describe Tyrion::Document do
   end
   
   describe ".find_by_" do
-    context "when performing the search with a string" do
+    context "when performing the search without a regexp" do
       it "should return a single value" do
         search = Post.find_by_title("Hello")
         search.should_not be_nil
         search.should_not be_a(Array)
       end
       
+      it 'should return the first document found' do
+        search = Post.find_by_rank(2)
+        search.title.should == "Testing"
+      end
+      
       it "should return nil if nothing is found" do
-        Post.find_by_title("A").should be_nil
+        Post.find_by_title(5).should be_nil
       end
     end
     
@@ -66,6 +73,27 @@ describe Tyrion::Document do
     it 'should delete every document' do
       Post.delete_all
       Post.all.count.should == 0
+    end
+  end
+  
+  describe ".remove" do
+    it "should remove all matching documents" do
+      criteria = { :rank => 2, :body => /!$/ }
+      Post.delete(criteria)
+      Post.where(criteria).should be_empty
+    end
+  end
+  
+  describe ".where" do
+    it 'should return an array on matching documents' do
+      search = Post.where(:rank => 2, :body => /!$/)
+      search.should_not be_nil
+      search.should be_a(Array)
+      search.count.should == 2
+    end
+
+    it 'shoudl return an empty array if no documents are matched' do
+      Post.where(:title => /e/, :body => /^A/, :rank => 9000).should be_empty
     end
   end
   
