@@ -25,17 +25,31 @@ describe Tyrion::Document do
   end
   
   describe ".find_by_" do
-    it 'should perform the search with a string' do
-      Post.find_by_title("Hello").should_not be_nil
-      Post.find_by_title("A").should be_nil
+    context "when performing the search with a string" do
+      it "should return a single value" do
+        search = Post.find_by_title("Hello")
+        search.should_not be_nil
+        search.should_not be_a(Array)
+      end
+      
+      it "should return nil if nothing is found" do
+        Post.find_by_title("A").should be_nil
+      end
     end
     
-    it 'should perform the search with a regexp' do
-      Post.find_by_title(/Hello/).should_not be_nil
-      Post.find_by_title(/^u/).should be_nil
+    context "when performing the search with a regexp" do
+      it "should return a single value" do
+        search = Post.find_by_title(/Hello/).should_not be_nil
+        search.should_not be_nil
+        search.should_not be_a(Array)
+      end
+      
+      it "should return nil if nothing is found" do
+        Post.find_by_title(/^u/).should be_nil
+      end
     end
     
-    it 'should raise an exception if the search is performed withouth arguments' do
+    it 'should raise an exception if the search is performed without arguments' do
       expect do
         Post.find_by_body
       end.to raise_exception
