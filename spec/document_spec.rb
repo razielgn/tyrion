@@ -2,16 +2,20 @@ require 'test_helper'
 require 'examples/post'
 
 describe Tyrion::Document do
+   
   let! :yml_posts do
     YAML.load_file File.join(File.dirname(__FILE__), 'fixtures', 'posts.yml')
   end
   
   before :each do
-    Post.delete_all
+    delete_file
+    Post.reload
     
     yml_posts.each do |p|
       a = Post.create! p
     end
+    
+    Post.reload
   end
   
   describe ".create" do
@@ -103,6 +107,16 @@ describe Tyrion::Document do
       post.title = "Title"
       post.body = "Body"
       post.save.should be_true
+    end
+  end
+  
+  describe "#method_missing" do
+    it 'should allow to read and update new attributes' do
+      post = Post.new
+      post.send :write_attribute, :comments, 1
+      post.comments.should == 1
+      post.comments = 2
+      post.comments.should == 2
     end
   end
   

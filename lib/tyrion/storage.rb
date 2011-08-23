@@ -1,9 +1,9 @@
 module Tyrion
-  module Storage
+  module Storage    
     extend ActiveSupport::Concern
-    
+        
     included do
-      load_stuff self
+      reload unless self == Tyrion::Components
     end
     
     module ClassMethods
@@ -11,13 +11,13 @@ module Tyrion
         @storage ||= {}
       end
     
-      def load_stuff klass
-        klass_name = klass.to_s.downcase
+      def reload
+        klass_name = to_s.downcase
         path = klass_filepath klass_name
         
-        if File.exists? path
+        if File.exists?(path)
           raw_file = File.read(path)
-          storage[klass_name] = MultiJson.decode(raw_file).map{ |doc| klass.create doc }
+          storage[klass_name] = MultiJson.decode(raw_file).map{ |doc| create doc }
         else
           storage[klass_name] = []
         end

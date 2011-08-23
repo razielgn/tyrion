@@ -1,9 +1,13 @@
-require 'tyrion'
-
-tmp_dir = File.join(File.dirname(__FILE__), '..', 'tmp')
-FileUtils.mkdir tmp_dir unless File.directory? tmp_dir
-Tyrion::Connection.path = tmp_dir
-
 require 'mocha'
+require 'tmpdir'
+require 'fileutils'
+
+require 'tyrion'
+Tyrion::Connection.path = Dir.tmpdir
 
 RSpec.configure{ |config| config.mock_with :mocha }
+
+def delete_file
+  file = File.join(Dir.tmpdir, 'post.json')
+  FileUtils.rm file if File.exists?(file)
+end

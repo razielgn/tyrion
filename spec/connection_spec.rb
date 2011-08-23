@@ -1,6 +1,9 @@
 require 'test_helper'
 
 describe Tyrion::Connection do
+  before{ @original_path = subject.path }  
+  after{ subject.path = @original_path }
+  
   describe '.path' do
     it 'should raise an exception if no path is set' do
       expect do
