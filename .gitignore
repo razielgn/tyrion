@@ -20,3 +20,5 @@ spec/reports
 .yardoc
 _yardoc
 doc/
+
+Gemfile.lock
