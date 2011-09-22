@@ -8,25 +8,29 @@ describe Tyrion::Document do
   end
   
   before :each do
-    delete_file
     Post.reload
     
     yml_posts.each do |p|
-      a = Post.create! p
+      Post.create! p
     end
-    
+  end
+  
+  it 'should survive a reload' do
     Post.reload
+    Post.all.count.should == yml_posts.count
   end
   
   describe ".create" do
-    post = Post.create :title => "Title", :body => "Body"
-    post.title.should == "Title"
-    post.body.should == "Body"
+    it 'should create a new instance with given attributes' do
+      post = Post.create :title => "Title", :body => "Body"
+      post.title.should == "Title"
+      post.body.should == "Body"
+    end
   end
   
   describe ".all" do
     it 'should find three posts' do
-      Post.all.count.should == 3
+      Post.all.count.should == yml_posts.count
     end
   end
   
