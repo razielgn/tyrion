@@ -46,7 +46,7 @@ Each file is an array of homogeneous documents (much like collections).
   Post.delete_all # You get the idea
 ```
 ``` ruby
-  Post.where :title => /^Hello/
+  Post.delete :title => /^Hello/
 ```
 
 ### Querying
