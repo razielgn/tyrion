@@ -30,6 +30,11 @@ module Tyrion
         other.attributes == attributes
       end
       
+      def initialize(attrs = {})
+        @attributes = attrs.stringify_keys
+        @new_document = true
+      end
+      
       private
       
       def klass_name

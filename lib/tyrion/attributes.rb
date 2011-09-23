@@ -17,11 +17,6 @@ module Tyrion
     module InstanceMethods
       attr_reader :attributes
       
-      def initialize
-        super
-        @attributes = {}
-      end
-      
       def method_missing(name, *args)
         attr = name.to_s
         return super unless attributes.has_key? attr.gsub("=", "")

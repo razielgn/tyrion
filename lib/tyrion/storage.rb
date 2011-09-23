@@ -29,8 +29,6 @@ module Tyrion
         File.open(path, 'w') do |f|
           f.puts MultiJson.encode(storage[klass_name].map &:attributes)
         end
-        
-        true
       end
       
       protected

@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   
   s.add_dependency 'multi_json'
   s.add_dependency 'json_pure'
+  s.add_dependency 'activemodel'
   
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'simplecov'
