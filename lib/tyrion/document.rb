@@ -2,8 +2,14 @@ module Tyrion
   
   # Base module to persist objects.
   module Document
-    extend ActiveSupport::Concern
-    include Tyrion::Components
+    def self.included(receiver)
+      receiver.extend ClassMethods
+      
+      receiver.class_eval do
+        include Tyrion::Components
+        include InstanceMethods
+      end
+    end
     
     module ClassMethods
       protected

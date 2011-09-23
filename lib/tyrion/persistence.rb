@@ -1,6 +1,9 @@
 module Tyrion
   module Persistence
-    extend ActiveSupport::Concern
+    def self.included(receiver)
+      receiver.extend ClassMethods
+      receiver.send :include, InstanceMethods
+    end
     
     module ClassMethods
       def create attributes = {}

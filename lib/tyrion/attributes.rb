@@ -1,6 +1,9 @@
 module Tyrion
-  module Attributes
-    extend ActiveSupport::Concern
+  module Attributes    
+    def self.included(receiver)
+      receiver.extend ClassMethods
+      receiver.send :include, InstanceMethods
+    end
     
     module ClassMethods
       def field(name, type = String)

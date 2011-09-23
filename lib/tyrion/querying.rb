@@ -1,6 +1,8 @@
 module Tyrion
   module Querying
-    extend ActiveSupport::Concern
+    def self.included(receiver)
+      receiver.extend ClassMethods
+    end
     
     module ClassMethods
       def all
@@ -43,9 +45,6 @@ module Tyrion
           super
         end
       end
-    end
-  
-    module InstanceMethods
     end
   end
 end

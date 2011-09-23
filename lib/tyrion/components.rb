@@ -1,10 +1,12 @@
 module Tyrion
   module Components
-    extend ActiveSupport::Concern
-    
-    include Tyrion::Attributes
-    include Tyrion::Persistence
-    include Tyrion::Querying
-    include Tyrion::Storage
+    def self.included(receiver)
+      receiver.class_eval do
+        include Tyrion::Attributes
+        include Tyrion::Persistence
+        include Tyrion::Querying
+        include Tyrion::Storage
+      end
+    end
   end
 end

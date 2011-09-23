@@ -1,9 +1,9 @@
 module Tyrion
   module Storage    
-    extend ActiveSupport::Concern
-        
-    included do
-      reload unless self == Tyrion::Components
+    def self.included(receiver)
+      receiver.extend ClassMethods
+      
+      receiver.reload unless receiver == Tyrion::Components
     end
     
     module ClassMethods
@@ -38,9 +38,6 @@ module Tyrion
       def klass_filepath klass_name
         File.join(Connection.path, klass_name + ".json")
       end
-    end
-    
-    module InstanceMethods
     end
   end
 end

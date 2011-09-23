@@ -1,5 +1,4 @@
 require 'multi_json'
-require 'active_support'
 
 require 'tyrion/version'
 require 'tyrion/connection'
