@@ -2,38 +2,48 @@ require 'test_helper'
 require 'examples/post'
 
 describe Tyrion::Document do
-   
+
   let! :yml_posts do
     YAML.load_file File.join(File.dirname(__FILE__), 'fixtures', 'posts.yml')
   end
-  
+
   before :each do
     Post.reload
-    
+
     yml_posts.each do |p|
-      Post.create! p
+      Post.create p
     end
   end
-  
+
   it 'should survive a reload' do
     Post.reload
     Post.all.count.should == yml_posts.count
   end
-  
-  describe ".create" do
+
+  describe ".new" do
     it 'should create a new instance with given attributes' do
+      post = Post.new :title => "Title", :body => "Body"
+      post.title.should == "Title"
+      post.body.should == "Body"
+      post.should_not be_persisted
+    end
+  end
+
+  describe ".create" do
+    it 'should save a new instance with given attributes' do
       post = Post.create :title => "Title", :body => "Body"
       post.title.should == "Title"
       post.body.should == "Body"
+      post.should be_persisted
     end
   end
-  
+
   describe ".all" do
     it 'should find three posts' do
       Post.all.count.should == yml_posts.count
     end
   end
-  
+
   describe ".find_by_" do
     context "when performing the search without a regexp" do
       it "should return a single value" do
@@ -41,49 +51,49 @@ describe Tyrion::Document do
         search.should_not be_nil
         search.should_not be_a(Array)
       end
-      
+
       it 'should return the first document found' do
         search = Post.find_by_rank(2)
         search.title.should == "Testing"
       end
-      
+
       it "should return nil if nothing is found" do
         Post.find_by_title(5).should be_nil
       end
     end
-    
+
     context "when performing the search with a regexp" do
       it "should return a single value" do
         search = Post.find_by_title(/Hello/).should_not be_nil
         search.should_not be_nil
         search.should_not be_a(Array)
       end
-      
+
       it "should return nil if nothing is found" do
         Post.find_by_title(/^u/).should be_nil
       end
     end
-    
+
     it 'should raise an exception if the search is performed without arguments' do
       expect do
         Post.find_by_body
       end.to raise_exception
     end
-    
+
     it 'should raise an exception if the search is performed on an unknown attribute' do
       expect do
         Post.find_by_id
       end.to raise_exception
     end
   end
-  
+
   describe ".remove_all" do
     it 'should delete every document' do
       Post.delete_all
       Post.all.count.should == 0
     end
   end
-  
+
   describe ".remove" do
     it "should remove all matching documents" do
       criteria = { :rank => 2, :body => /!$/ }
@@ -91,7 +101,7 @@ describe Tyrion::Document do
       Post.where(criteria).should be_empty
     end
   end
-  
+
   describe ".where" do
     it 'should return an array on matching documents' do
       search = Post.where(:rank => 2, :body => /!$/)
@@ -104,7 +114,7 @@ describe Tyrion::Document do
       Post.where(:title => /e/, :body => /^A/, :rank => 9000).should be_empty
     end
   end
-  
+
   describe "#save" do
     it 'should save a new document' do
       post = Post.new
@@ -113,7 +123,7 @@ describe Tyrion::Document do
       post.save.should be_true
     end
   end
-  
+
   describe "#method_missing" do
     it 'should allow to read and update new attributes' do
       post = Post.new
@@ -123,7 +133,7 @@ describe Tyrion::Document do
       post.comments.should == 2
     end
   end
-  
+
   describe "#delete" do
     it 'should remove the document' do
       Post.find_by_title("Hello").delete

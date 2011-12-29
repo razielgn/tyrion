@@ -1,12 +1,6 @@
 require 'test_helper'
 require 'examples/car'
 
-RSpec::Matchers.define :be_a_new_document do
-  match do |document|
-    document.new_document?
-  end
-end
-
 describe Tyrion::Validations do
   subject{ Car.new }
 
@@ -27,9 +21,9 @@ describe Tyrion::Validations do
 
   it 'should say wether a document is new or not' do
     subject.plate = 'AX567ED'
-    should be_a_new_document
+    should_not be_persisted
     subject.save
-    should_not be_a_new_document
+    should be_persisted
   end
 
   it 'should not save an invalid document' do
