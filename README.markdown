@@ -16,6 +16,8 @@ Each file is an array of homogeneous documents (much like collections).
 ```
 
 ### Document
+It supports validations from ActiveModel::Validations.
+
 ``` ruby
   class Post
     include Tyrion::Document
@@ -23,18 +25,19 @@ Each file is an array of homogeneous documents (much like collections).
     field :title
     field :body
     field :rank
+    
+    validates_presence_of :title, :body, :rank
   end
 ```
 
 ### Persistence
 #### Save
 ``` ruby
-  post = Post.create :title => "Hello", :body => "Hi there, ..."
+  post = Post.new :title => "Hello", :body => "Hi there, ..."
   post.save
 ```
 ``` ruby
-  # Insta-save with !
-  Post.create! :title => "Hello", :body => "Hi there, ..."
+  Post.create :title => "Hello", :body => "Hi there, ..."
 ```
 
 #### Delete
@@ -43,22 +46,57 @@ Each file is an array of homogeneous documents (much like collections).
   post.delete
 ```
 ``` ruby
-  Post.delete_all # You get the idea
-```
-``` ruby
-  Post.delete :title => /^Hello/
+  Post.delete_all
 ```
 
 ### Querying
-`find_by_attribute`: just the first match
-
-``` ruby
-  Post.find_by_title "Hello"
-  Post.find_by_body /^Hi there/i
-```
+Chainable querying is allowed.  
+First called is first executed and an enumerable is returned.
 
 `where`: all matching documents
 
 ``` ruby
-  Post.where :title => /^Hello/, :rank => 3
+  Post.where :title => 'Hello', :rank => 3
 ```
+
+`limit`: limits returned documents
+
+``` ruby
+  Post.limit(5)
+```
+
+`skip`: offsets returned documents
+
+``` ruby
+  Post.skip(5)
+```
+
+`asc`: sorts ascendingly according to passed keys
+
+``` ruby
+  Post.asc(:rank, :title)
+```
+
+`desc`: sorts discendingly according to passed keys
+
+``` ruby
+  Post.desc(:rank, :title)
+```
+
+#### Fancy chains
+``` ruby
+  Post.where(:rank => 5).desc(:title, :body).skip(5).limit(5)
+```
+And since it delegates to an enumerable...
+
+``` ruby
+  Post.where(:rank => 5).count
+  Post.where(:rank => 10).each{ |doc| ... }
+```
+
+## ToDos
+
+* Modifiers on criterias (delete, update, ...)
+* Default values for attributes
+* Embedded documents
+* Keys (_id?)
