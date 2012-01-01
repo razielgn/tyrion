@@ -6,16 +6,12 @@ module Tyrion
     end
 
     module ClassMethods
-      def create attributes = {}
-        new(attributes).tap{ |doc| doc.save }
+      def create(*args)
+        new(*args).tap{ |doc| doc.save }
       end
 
       def delete_all
         storage[klass_name].clear
-      end
-
-      def delete attributes = {}
-        where(attributes).each(&:delete)
       end
     end
 
@@ -39,7 +35,7 @@ module Tyrion
 
       def delete
         self.class.storage[klass_name].delete_if{ |doc| self == doc }
-        self.class.save_storage klass_name
+        self.class.save_storage(klass_name)
       end
 
       def persisted?

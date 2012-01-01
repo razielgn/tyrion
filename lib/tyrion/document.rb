@@ -6,13 +6,17 @@ module Tyrion
       receiver.extend ClassMethods
 
       receiver.class_eval do
-        include Tyrion::Components
+        include Tyrion::Attributes
+        include Tyrion::Querying
+        include Tyrion::Validations
+        include Tyrion::Storage
+        include Tyrion::Persistence
         include InstanceMethods
       end
     end
 
     module ClassMethods
-      protected
+      private
 
       def klass_name
         to_s.downcase
@@ -20,16 +24,6 @@ module Tyrion
     end
 
     module InstanceMethods
-
-      # Checks for equality.
-      # @example Compare two objects
-      #   object == other
-      # @param [Object] The other object to compare with
-      # @return [true, false] True if objects' attributes are the same, false otherwise.
-      def == other
-        other.attributes == attributes
-      end
-
       private
 
       def klass_name

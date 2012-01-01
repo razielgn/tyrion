@@ -32,7 +32,15 @@ module Tyrion
         end
       end
 
-      protected
+      # Checks for equality.
+      # @example Compare two objects
+      #   object == other
+      # @param [Object] The other object to compare with
+      # @return [true, false] True if objects' attributes are the same, false otherwise.
+      def == other
+        return false unless other.is_a?(Tyrion::Document)
+        other.attributes == attributes
+      end
 
       def read_attribute(name)
         attributes[name.to_s]
