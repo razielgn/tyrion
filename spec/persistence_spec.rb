@@ -1,10 +1,15 @@
 require 'test_helper'
 require 'examples/post'
 
-add_connection_cleanup!
-
 describe Tyrion::Persistence do
-  before(:each){ Post.reload }
+  before(:each) do
+    Tyrion::Connection.path = Dir.mktmpdir
+    Post.reload
+  end
+
+  after(:each) do
+    FileUtils.rm_rf Tyrion::Connection.path
+  end
 
   describe '.create' do
     it 'should save a new instance with given attributes' do
@@ -19,6 +24,7 @@ describe Tyrion::Persistence do
     it 'should delete every document' do
       5.times{ Post.create :title => 'Title', :body => 'Body' }
       Post.delete_all
+      Post.reload
       Post.count.should == 0
     end
   end

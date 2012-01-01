@@ -9,8 +9,8 @@ module Tyrion
         include Tyrion::Attributes
         include Tyrion::Querying
         include Tyrion::Validations
-        include Tyrion::Storage
         include Tyrion::Persistence
+        include Tyrion::Storage
         include InstanceMethods
       end
     end

@@ -1,7 +1,4 @@
 module Tyrion
-  class CriteriaException < Exception
-  end
-
   class Criteria
     include Enumerable
 
@@ -67,7 +64,7 @@ module Tyrion
 
         case type
         when :where
-          @data.select! do |doc|
+          @data = @data.select do |doc|
             args.each_pair.map do |k, v|
               doc.read_attribute(k) == v
             end.inject(&:&)
@@ -78,8 +75,16 @@ module Tyrion
           @data = Array(@data[args..-1])
         when :sort
           keys, dir = args
-          @data.sort_by! do |doc|
-            keys.map{|s| doc.read_attribute(s) }
+          if @data.respond_to? :sort_by!
+            @data.sort_by! do |doc|
+              keys.map{|s| doc.read_attribute(s) }
+            end
+          else
+            @data.sort! do |a, b|
+              first = keys.map{|s| a.read_attribute(s) }
+              second = keys.map{|s| b.read_attribute(s) }
+              first <=> second
+            end
           end
           @data.reverse! unless dir
         end

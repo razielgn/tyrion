@@ -12,6 +12,7 @@ module Tyrion
 
       def delete_all
         storage[klass_name].clear
+        save_storage(klass_name)
       end
     end
 

@@ -17,7 +17,7 @@ module Tyrion
 
         if File.exists?(path)
           raw_file = File.read(path)
-          storage[klass_name] = MultiJson.decode(raw_file).map{ |doc| create doc }
+          storage[klass_name] = MultiJson.decode(raw_file).map{ |doc| new(doc) }
         else
           storage[klass_name] = []
         end
