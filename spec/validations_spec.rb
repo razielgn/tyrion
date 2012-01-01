@@ -19,15 +19,9 @@ describe Tyrion::Validations do
     should be_valid
   end
 
-  it 'should say wether a document is new or not' do
-    subject.plate = 'AX567ED'
-    should_not be_persisted
-    subject.save
-    should be_persisted
-  end
-
   it 'should not save an invalid document' do
+    count = Car.count
     subject.save.should be_false
-    Car.all.count.should be_zero
+    Car.count.should == count
   end
 end
