@@ -26,21 +26,23 @@ describe Tyrion::Querying do
     Post.delete_all
   end
 
-  it 'should return a criteria when calling its methods' do
-    Post.all.should be_a(Tyrion::Criteria)
-  end
+  describe '.all' do
+    it 'should return a criteria when calling its methods' do
+      Post.all.should be_a(Tyrion::Criteria)
+    end
 
-  it 'should create a Criteria instance and passing the model\'s class name' do
-    Post.all.klass.should == Post.send(:klass_name)
-  end
+    it 'should create a Criteria instance and passing the model\'s class name' do
+      Post.all.klass.should == Post.send(:klass_name)
+    end
 
-  it 'should return an enumerable' do
-    Post.all.class.ancestors.should include(Enumerable)
-  end
+    it 'should return an enumerable' do
+      Post.all.class.ancestors.should include(Enumerable)
+    end
 
-  it 'should return an iterable collection of Tyrion::Documents' do
-    Post.all.each do |doc|
-      doc.should be_a(Tyrion::Document)
+    it 'should return an iterable collection of Tyrion::Documents' do
+      Post.all.each do |doc|
+        doc.should be_a(Tyrion::Document)
+      end
     end
   end
 
